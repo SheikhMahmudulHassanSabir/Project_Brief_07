@@ -10,5 +10,9 @@ Recruitment  and Human Resources
 # project brief description
 The Job Portal System is a web-based recruitment platform designed to connect job seekers with employers. The application enables companies to publish job opportunities, applicants to search and apply for jobs, and administrators to monitor recruitment activities through a centralized system. The project simulates a real-world recruitment platform where multiple users interact with the same system while maintaining different access levels and responsibilities. Students will build the application using the MERN Stack while learning authentication, role-based authorization, CRUD operations, database relationships, RESTful APIs, and deployment. 
 
+<<<<<<< HEAD
 React.js, Node.js, Express.js, MongoDB
 
+=======
+React.js, Node.js, Express.js, MongoDB
+>>>>>>> 5bf2e17 (Updated project files)

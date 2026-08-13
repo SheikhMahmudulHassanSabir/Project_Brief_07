@@ -3,10 +3,14 @@ Job Portal System
 
 # Team members
 <<<<<<< HEAD
+<<<<<<< HEAD
 Manisha Upprety, Sheikh Mahmuldul Hassan Sabir, Hawa Munyah, Lakshya Jyoti Chowhan, Komal Mishra
 =======
 Manisha Upprety, Sheikh mahmuldul Hussan Sabir, Hawa Munyah, Lakshya Jyoti Chowhan, Komal Mishra
 >>>>>>> origin/main
+=======
+Manisha Upprety, Sheikh Mahmuldul Hassan Sabir, Hawa Munyah, Lakshya Jyoti Chowhan, Komal Mishra
+>>>>>>> 2920e56e197ed167d6d024450097446a6033e734
 
 # Project domain
 Recruitment  and Human Resources

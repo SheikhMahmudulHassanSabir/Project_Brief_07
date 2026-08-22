@@ -1,0 +1,67 @@
+.jobseeker-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  text-align: left;
+}
+
+.jobseeker-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .jobseeker-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-card-sticky {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 1.75rem;
+  height: fit-content;
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-card-sticky {
+    background: #1e1f29;
+    border-color: #2e303f;
+  }
+}
+
+.profile-avatar-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #aa3bff 0%, #7928ca 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.skill-tag {
+  display: inline-block;
+  background: rgba(170, 59, 255, 0.1);
+  color: #aa3bff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .skill-tag {
+    background: rgba(192, 132, 252, 0.15);
+    color: #c084fc;
+  }
+}

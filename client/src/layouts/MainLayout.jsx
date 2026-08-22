@@ -1,15 +1,16 @@
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
+import React from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 function MainLayout({ children }) {
   return (
-<div className="main-layout">
-<Navbar />
-<main className="main-content">
-        {children || <p>Job Portal System — main content placeholder.</p>}
-</main>
-<Footer />
-</div>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', width: '100%' }}>
+      <Navbar />
+      <main style={{ flex: 1, width: '100%' }}>
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 }
 

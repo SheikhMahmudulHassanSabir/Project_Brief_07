@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, LogOut, Briefcase, UserCheck, Shield } from 'lucide-react';
-import logoW from '../assets/images/logo_W.png';
-import logoB from '../assets/images/logo_B.png';
-import ThemeToggle from '../components/common/ThemeToggle';
+import logoW from '../../assets/images/logo_W.png';
+import logoB from '../../assets/images/logo_B.png';
+import ThemeToggle from '../common/ThemeToggle';
 
 function Navbar() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoW from '../assets/images/logo_W.png';
-import logoB from '../assets/images/logo_B.png';
+import logoW from '../../assets/images/logo_W.png';
+import logoB from '../../assets/images/logo_B.png';
 
 function Footer() {
   const currentYear = new Date().getFullYear();

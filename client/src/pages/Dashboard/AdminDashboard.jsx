@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import './EmployerDashboard.css';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -17,6 +18,12 @@ function AdminDashboard() {
   const [jobs, setJobs] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
+
+  const [confirmState, setConfirmState] = useState({
+    isOpen: false,
+    actionType: null,
+    targetId: null,
+  });
 
   const token = localStorage.getItem('token');
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -43,32 +50,40 @@ function AdminDashboard() {
     }
   };
 
-  const handleDeleteUser = async (userId) => {
-    if (!window.confirm('Are you sure? This will remove the user and all associated jobs/applications.')) return;
-
-    try {
-      await axios.delete(`${API_URL}/admin/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUsers(users.filter((u) => u._id !== userId));
-      fetchAdminData();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete user');
-    }
+  const handleDeleteUser = (userId) => {
+    setConfirmState({ isOpen: true, actionType: 'user', targetId: userId });
   };
 
-  const handleDeleteJob = async (jobId) => {
-    if (!window.confirm('Delete this job posting from the platform?')) return;
+  const handleDeleteJob = (jobId) => {
+    setConfirmState({ isOpen: true, actionType: 'job', targetId: jobId });
+  };
 
-    try {
-      await axios.delete(`${API_URL}/jobs/${jobId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setJobs(jobs.filter((j) => j._id !== jobId));
-      fetchAdminData();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Failed to delete job');
+  const executeConfirmAction = async () => {
+    const { actionType, targetId } = confirmState;
+    if (!targetId) return;
+
+    if (actionType === 'user') {
+      try {
+        await axios.delete(`${API_URL}/admin/users/${targetId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUsers(users.filter((u) => u._id !== targetId));
+        fetchAdminData();
+      } catch (err) {
+        alert(err.response?.data?.message || 'Failed to delete user');
+      }
+    } else if (actionType === 'job') {
+      try {
+        await axios.delete(`${API_URL}/jobs/${targetId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setJobs(jobs.filter((j) => j._id !== targetId));
+        fetchAdminData();
+      } catch (err) {
+        alert(err.response?.data?.message || 'Failed to delete job');
+      }
     }
+    setConfirmState({ isOpen: false, actionType: null, targetId: null });
   };
 
   const metrics = stats?.metrics || {
@@ -343,6 +358,21 @@ function AdminDashboard() {
           </div>
         )}
       </div>
+
+      <ConfirmModal 
+        isOpen={confirmState.isOpen}
+        title={confirmState.actionType === 'user' ? "Delete User" : "Delete Job Vacancy"}
+        message={
+          confirmState.actionType === 'user' 
+            ? "Are you sure? This will remove the user and all associated jobs/applications."
+            : "Delete this job posting from the platform? This action cannot be undone."
+        }
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+        onConfirm={executeConfirmAction}
+        onClose={() => setConfirmState({ isOpen: false, actionType: null, targetId: null })}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   Clock,
 } from 'lucide-react';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function BrowseJobs() {
   const navigate = useNavigate();
@@ -26,8 +27,7 @@ function BrowseJobs() {
   const [appliedJobIds, setAppliedJobIds] = useState(new Set());
   const [alertMsg, setAlertMsg] = useState({ type: '', text: '' });
 
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const { user, token } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {

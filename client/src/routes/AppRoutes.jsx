@@ -12,6 +12,7 @@ import PostJob from '../pages/PostJob/PostJob';
 import EmployerDashboard from '../pages/Dashboard/EmployerDashboard';
 import JobSeekerDashboard from '../pages/Dashboard/JobSeekerDashboard';
 import AdminDashboard from '../pages/Dashboard/AdminDashboard';
+import Profile from '../pages/Profile/Profile';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import NotFound from '../pages/NotFound/NotFound';
 import '../App.css';
@@ -49,7 +50,7 @@ function AppRoutes() {
         <Route
           path="/jobseeker"
           element={
-            <ProtectedRoute allowedRoles={['job-seeker', 'admin']}>
+            <ProtectedRoute allowedRoles={['job-seeker', 'jobseeker', 'admin']}>
               <JobSeekerDashboard />
             </ProtectedRoute>
           }
@@ -57,8 +58,16 @@ function AppRoutes() {
         <Route
           path="/my-applications"
           element={
-            <ProtectedRoute allowedRoles={['job-seeker', 'admin']}>
+            <ProtectedRoute allowedRoles={['job-seeker', 'jobseeker', 'admin']}>
               <JobSeekerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={['job-seeker', 'jobseeker', 'employer', 'admin']}>
+              <Profile />
             </ProtectedRoute>
           }
         />

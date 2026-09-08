@@ -12,14 +12,21 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import './EmployerDashboard.css';
+import Welcome from '../../components/common/Welcome';
+import PageTitle from '../../components/common/PageTitle';
+import ConfirmModal from '../../components/common/ConfirmModal';
+import { useAuth } from '../../context/AuthContext';
 
 function JobSeekerDashboard() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [appToWithdraw, setAppToWithdraw] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const token = localStorage.getItem('token');
+  const { user, token } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
@@ -40,18 +47,24 @@ function JobSeekerDashboard() {
     }
   };
 
-  const handleWithdraw = async (applicationId) => {
-    if (!window.confirm('Are you sure you want to withdraw this application?')) return;
+  const handleWithdraw = (applicationId) => {
+    setAppToWithdraw(applicationId);
+    setIsConfirmOpen(true);
+  };
 
+  const executeWithdraw = async () => {
+    if (!appToWithdraw) return;
     try {
-      await axios.delete(`${API_URL}/applications/${applicationId}`, {
+      await axios.delete(`${API_URL}/applications/${appToWithdraw}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setApplications(applications.filter((app) => app._id !== applicationId));
+      setApplications(applications.filter((app) => app._id !== appToWithdraw));
       setMsg('Application withdrawn successfully.');
       setTimeout(() => setMsg(''), 3000);
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to withdraw application');
+    } finally {
+      setAppToWithdraw(null);
     }
   };
 
@@ -59,17 +72,21 @@ function JobSeekerDashboard() {
   const totalShortlisted = applications.filter((a) => a.status === 'Shortlisted').length;
   const totalPending = applications.filter((a) => a.status === 'Pending').length;
 
+  const filteredApplications = applications.filter((app) => 
+    (app.job?.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (app.job?.companyName || '').toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="page-wrapper">
       <div className="container dashboard-wrapper">
         {/* Header Title */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
-          <div>
-            <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Candidate Portal</h1>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Welcome back, <strong>{user.name}</strong> • Track your applications & opportunities
-            </p>
-          </div>
+          <Welcome 
+            dashboardTitle="Candidate Portal" 
+            userName={user.name} 
+            subtitle="Track your applications & opportunities" 
+          />
           <Link to="/jobs" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Search size={16} />
             <span>Browse Open Vacancies</span>
@@ -127,8 +144,26 @@ function JobSeekerDashboard() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '2rem', alignItems: 'flex-start' }} className="responsive-dashboard-grid">
           {/* Applications Table */}
           <div className="table-container">
-            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-default)', background: 'var(--bg-surface)' }}>
+            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-default)', background: 'var(--bg-surface)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
               <h2 style={{ fontSize: '1.2rem', fontWeight: '700', margin: 0, color: 'var(--text-primary)' }}>Application History</h2>
+              
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ position: 'relative' }}>
+                  <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                  <input 
+                    type="text" 
+                    placeholder="Search roles or companies..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{ padding: '0.4rem 0.8rem 0.4rem 2rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)', outline: 'none', background: 'var(--bg-app)', color: 'var(--text-primary)' }}
+                  />
+                </div>
+                {searchQuery && (
+                  <button onClick={() => setSearchQuery('')} className="btn btn-sm btn-outline">
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
 
             {loading ? (
@@ -149,6 +184,13 @@ function JobSeekerDashboard() {
                   <span>Explore Openings</span>
                 </Link>
               </div>
+            ) : filteredApplications.length === 0 ? (
+              <div className="empty-state" style={{ padding: '3rem' }}>
+                <Search size={32} color="var(--text-muted)" style={{ margin: '0 auto 1rem', display: 'block' }} />
+                <h3 className="empty-state-title">No results found</h3>
+                <p className="empty-state-desc">We couldn't find any applications matching "{searchQuery}".</p>
+                <button onClick={() => setSearchQuery('')} className="btn btn-secondary">Clear Search</button>
+              </div>
             ) : (
               <table className="data-table">
                 <thead>
@@ -160,7 +202,7 @@ function JobSeekerDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {applications.map((app) => (
+                  {filteredApplications.map((app) => (
                     <tr key={app._id}>
                       <td>
                         <strong>{app.job?.title || 'Job Listing'}</strong>
@@ -262,9 +304,29 @@ function JobSeekerDashboard() {
               </div>
               <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginTop: '2px' }}>{user.email}</div>
             </div>
+
+            <div style={{ marginTop: '1.25rem' }}>
+              <Link to="/profile" className="btn btn-outline" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                Edit Profile
+              </Link>
+            </div>
           </div>
         </div>
       </div>
+
+      <ConfirmModal 
+        isOpen={isConfirmOpen}
+        title="Withdraw Application"
+        message="Are you sure you want to withdraw this application? This action cannot be undone."
+        confirmText="Withdraw"
+        cancelText="Cancel"
+        type="danger"
+        onConfirm={executeWithdraw}
+        onClose={() => {
+          setIsConfirmOpen(false);
+          setAppToWithdraw(null);
+        }}
+      />
 
       <style>{`
         @media (max-width: 900px) {

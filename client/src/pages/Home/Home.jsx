@@ -274,7 +274,7 @@ function Home() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
               {[1, 2, 3].map((n) => (
                 <div key={n} className="card" style={{ height: '220px', padding: '1.5rem' }}>
                   <div className="skeleton" style={{ height: '20px', width: '40%', marginBottom: '1rem' }} />
@@ -292,7 +292,7 @@ function Home() {
               </Link>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
               {featuredJobs.map((job) => (
                 <div key={job._id} className="card card-interactive" style={{ display: 'flex', flexDirection: 'column' }}>
                   <div className="card-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

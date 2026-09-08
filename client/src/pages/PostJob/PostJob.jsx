@@ -7,11 +7,11 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function PostJob() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const token = localStorage.getItem('token');
+  const { user, token } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   const [formData, setFormData] = useState({
@@ -43,11 +43,19 @@ function PostJob() {
 
     setLoading(true);
     try {
-      await axios.post(
-        `${API_URL}/jobs`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const newJob = {
+        _id: 'job_' + Date.now(),
+        ...formData,
+        employerId: user.id,
+        createdAt: new Date().toISOString(),
+        applicantCount: 0,
+        shortlistedCount: 0
+      };
+      
+      const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+      existingJobs.push(newJob);
+      localStorage.setItem('jobs', JSON.stringify(existingJobs));
+
       setMsg({ type: 'success', text: 'Job vacancy published successfully! Redirecting to dashboard...' });
       setTimeout(() => {
         navigate('/employer');

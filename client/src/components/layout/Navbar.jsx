@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, Briefcase, UserCheck, Shield } from 'lucide-react';
+import { Menu, X, LogOut, Briefcase, UserCheck, Shield, User, Settings, Moon, Sun } from 'lucide-react';
 import logoW from '../../assets/images/logo_W.png';
 import logoB from '../../assets/images/logo_B.png';
-import ThemeToggle from '../common/ThemeToggle';
+import { useAuth } from '../../context/AuthContext';
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
   const [currentTheme, setCurrentTheme] = useState(() => {
     return document.documentElement.getAttribute('data-theme') || localStorage.getItem('app-theme') || 'light';
   });
 
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -30,11 +32,30 @@ function Navbar() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    setDropdownOpen(false);
     setMobileMenuOpen(false);
-    navigate('/login');
+    logout();
+  };
+
+  const toggleTheme = () => {
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('app-theme', newTheme);
+    setCurrentTheme(newTheme);
   };
 
   const getDashboardLink = () => {
@@ -88,6 +109,23 @@ function Navbar() {
     color: '#FFFFFF',
     border: '1px solid var(--palette-accent)',
     boxShadow: 'var(--primary-shadow)',
+  };
+
+  const dropdownItemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    padding: '0.6rem 0.75rem',
+    fontSize: '0.88rem',
+    fontWeight: '500',
+    borderRadius: 'var(--radius-sm)',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left',
+    textDecoration: 'none',
+    transition: 'background-color var(--transition-fast)',
   };
 
   return (
@@ -201,8 +239,14 @@ function Navbar() {
             >
               Contact
             </Link>
+          </nav>
+        </div>
 
-            {user && (
+        {/* Right Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="desktop-nav">
+              
               <Link
                 to={getDashboardLink()}
                 style={navBtnBaseStyle}
@@ -210,52 +254,138 @@ function Navbar() {
                 {getDashboardIcon()}
                 <span>{getDashboardLabel()}</span>
               </Link>
-            )}
-          </nav>
-        </div>
 
-        {/* Right Actions & Theme Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <ThemeToggle />
+              <div style={{ position: 'relative' }} ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
+                >
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: 'var(--nav-text)', fontWeight: '600', fontSize: '0.85rem' }}>{user.name}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                      {user.role}
+                    </div>
+                  </div>
 
-          {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="desktop-nav">
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ color: 'var(--nav-text)', fontWeight: '600', fontSize: '0.85rem' }}>{user.name}</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
-                  {user.role}
-                </div>
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '50%',
+                      background: 'var(--palette-accent)',
+                      border: currentTheme === 'dark' ? '1px solid #444444' : '1px solid #D4D4D4',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: '700',
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    {user.name?.charAt(0) || 'U'}
+                  </div>
+                </button>
+
+                {dropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 15px)',
+                      right: 0,
+                      width: '240px',
+                      background: currentTheme === 'dark' ? '#1f1f1f' : '#ffffff',
+                      border: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea',
+                      borderRadius: 'var(--radius-md)',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                      padding: '0.5rem',
+                      zIndex: 1000,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.25rem'
+                    }}
+                  >
+                    <div style={{ 
+                      padding: '0.5rem 0.5rem 0.75rem 0.5rem', 
+                      borderBottom: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea',
+                      marginBottom: '0.25rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem'
+                    }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          background: 'var(--palette-accent)',
+                          color: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: '700',
+                          fontSize: '1rem',
+                        }}
+                      >
+                        {user.name?.charAt(0) || 'U'}
+                      </div>
+                      <div>
+                        <div style={{ color: currentTheme === 'dark' ? '#EDEDED' : '#171717', fontWeight: '600', fontSize: '0.9rem' }}>{user.name}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+                          {user.role}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Link
+                      to="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <User size={16} />
+                      <span>Profile</span>
+                    </Link>
+                    <Link
+                      to="/settings"
+                      onClick={() => setDropdownOpen(false)}
+                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <Settings size={16} />
+                      <span>Settings</span>
+                    </Link>
+                    <button
+                      onClick={toggleTheme}
+                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                      <span>Theme</span>
+                    </button>
+                    <div style={{ borderTop: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea', margin: '0.25rem 0' }} />
+                    <button
+                      onClick={handleLogout}
+                      style={{ ...dropdownItemStyle, color: 'var(--palette-accent)' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <LogOut size={16} />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
               </div>
-
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: 'var(--palette-accent)',
-                  border: currentTheme === 'dark' ? '1px solid #444444' : '1px solid #D4D4D4',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                }}
-              >
-                {user.name?.charAt(0) || 'U'}
-              </div>
-
-              <button
-                onClick={handleLogout}
-                style={{
-                  ...navBtnBaseStyle,
-                  color: 'var(--palette-accent)',
-                }}
-                title="Sign out"
-              >
-                <LogOut size={14} />
-                <span>Logout</span>
-              </button>
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }} className="desktop-nav">
@@ -345,37 +475,77 @@ function Navbar() {
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginBottom: '0.5rem' }}>
                   Signed in as <strong>{user.name}</strong> ({user.role})
                 </div>
-                <button
-                  onClick={handleLogout}
-                  style={{ ...navBtnBaseStyle, width: '100%', color: 'var(--palette-accent)' }}
-                >
-                  <LogOut size={14} />
-                  <span>Sign Out</span>
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{ ...dropdownItemStyle, color: 'var(--nav-text)', padding: '0.4rem 0' }}
+                  >
+                    <User size={16} />
+                    <span>Profile</span>
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{ ...dropdownItemStyle, color: 'var(--nav-text)', padding: '0.4rem 0' }}
+                  >
+                    <Settings size={16} />
+                    <span>Settings</span>
+                  </Link>
+                  <button
+                    onClick={toggleTheme}
+                    style={{ ...dropdownItemStyle, color: 'var(--nav-text)', padding: '0.4rem 0' }}
+                  >
+                    {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                    <span>Theme</span>
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    style={{ ...dropdownItemStyle, color: 'var(--palette-accent)', padding: '0.4rem 0' }}
+                  >
+                    <LogOut size={16} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
               </div>
             </>
           ) : (
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{ ...navBtnBaseStyle, flex: 1 }}
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{ ...navBtnAccentStyle, flex: 1 }}
-              >
-                Get Started
-              </Link>
-            </div>
+            <>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ ...navBtnBaseStyle, flex: 1 }}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ ...navBtnAccentStyle, flex: 1 }}
+                >
+                  Get Started
+                </Link>
+              </div>
+              <div style={{ borderTop: '1px solid var(--nav-border)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                 <button
+                    onClick={toggleTheme}
+                    style={{ ...dropdownItemStyle, color: 'var(--nav-text)', padding: '0.4rem 0' }}
+                  >
+                    {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                    <span>Theme</span>
+                  </button>
+              </div>
+            </>
           )}
         </div>
       )}
 
       <style>{`
+        @media (max-width: 1024px) {
+          .desktop-nav { gap: 0.5rem !important; }
+          .desktop-nav a { font-size: 0.85rem !important; padding: 0.25rem 0.4rem !important; }
+        }
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: inline-flex !important; }

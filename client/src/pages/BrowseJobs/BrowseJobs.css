@@ -1,0 +1,88 @@
+.jobs-filter-form {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 2fr) minmax(0, 2fr) minmax(96px, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.jobs-filter-form > div,
+.jobs-filter-form > select,
+.jobs-filter-actions {
+  min-width: 0;
+}
+
+.jobs-filter-form > div:not(.jobs-filter-actions) {
+  height: 44px;
+}
+
+.jobs-filter-form input,
+.jobs-filter-form select {
+  min-width: 0;
+}
+
+.jobs-filter-form select {
+  height: 44px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jobs-filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.jobs-filter-actions .btn {
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.jobs-filter-actions .jobs-filter-clear {
+  flex: 0 0 44px;
+  width: 44px;
+  padding: 0;
+}
+
+@media (max-width: 1023px) {
+  .jobs-filter-form {
+    gap: 0.5rem;
+    padding: 1rem !important;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 2fr) minmax(0, 2fr) minmax(88px, 1fr);
+  }
+
+  .jobs-filter-form > div:not(.jobs-filter-actions) {
+    padding: 0 0.65rem !important;
+  }
+
+  .jobs-filter-form input,
+  .jobs-filter-form select {
+    font-size: 0.82rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .jobs-filter-form {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .jobs-filter-form > div:not(.jobs-filter-actions),
+  .jobs-filter-form select {
+    width: 100%;
+  }
+
+  .jobs-filter-actions {
+    flex-direction: column;
+  }
+
+  .jobs-filter-actions .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .jobs-filter-actions .jobs-filter-clear {
+    flex: 1;
+    width: 100%;
+  }
+}

@@ -10,9 +10,11 @@ import {
   Filter,
   RotateCcw,
   Clock,
+  X,
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import './BrowseJobs.css';
 
 function BrowseJobs() {
   const navigate = useNavigate();
@@ -148,13 +150,9 @@ function BrowseJobs() {
         {/* Filters Toolbar */}
         <form
           onSubmit={handleFilterSubmit}
-          className="card"
+          className="card jobs-filter-form"
           style={{
             padding: '1.25rem',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr)) auto auto',
-            gap: '1rem',
-            alignItems: 'center',
             marginBottom: '2.5rem',
             border: '1.5px solid var(--border-default)',
           }}
@@ -196,22 +194,23 @@ function BrowseJobs() {
             <option value="Finance">Finance</option>
           </select>
 
-          <button type="submit" className="btn btn-primary">
-            <Filter size={16} />
-            <span>Filter</span>
-          </button>
-
-          {(search || category !== 'All' || location) && (
-            <button type="button" onClick={handleClearFilters} className="btn btn-secondary">
-              <RotateCcw size={15} />
-              <span>Clear</span>
+          <div className="jobs-filter-actions">
+            <button type="submit" className="btn btn-primary">
+              <Filter size={16} />
+              <span>Filter</span>
             </button>
-          )}
+
+            {(search || category !== 'All' || location) && (
+              <button type="button" onClick={handleClearFilters} className="btn btn-secondary jobs-filter-clear" aria-label="Clear filters" title="Clear filters">
+                <X size={22} />
+              </button>
+            )}
+          </div>
         </form>
 
         {/* Job Listings Grid */}
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '1.5rem' }}>
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="card" style={{ padding: '1.75rem', height: '240px' }}>
                 <div className="skeleton" style={{ height: '20px', width: '35%', marginBottom: '1rem' }} />
@@ -236,7 +235,7 @@ function BrowseJobs() {
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '1.5rem' }}>
             {jobs.map((job) => {
               const isApplied = appliedJobIds.has(job._id);
 

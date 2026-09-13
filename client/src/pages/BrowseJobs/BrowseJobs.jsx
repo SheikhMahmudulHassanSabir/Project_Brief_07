@@ -11,6 +11,9 @@ import {
   RotateCcw,
   Clock,
   X,
+  Bookmark,
+  Calendar,
+  ArrowRight
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
@@ -136,20 +139,25 @@ function BrowseJobs() {
   };
 
   return (
-    <div className="page-wrapper">
-      {/* Header Banner */}
-      <section className="page-header browse-jobs-header" style={{ background: 'transparent', padding: '4rem 1.5rem 2.5rem' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
+    <div className="page-wrapper browse-jobs-wrapper">
+      {/* Decorative Hero Area */}
+      <section className="page-header browse-jobs-header">
+        <div className="hero-decoration right-circle"></div>
+        <div className="hero-decoration left-circle"></div>
+        <div className="container hero-container">
+          <div className="hero-badge">
+            Find Your Next Opportunity
+          </div>
           <h1>
-            Explore Open <span className="text-gradient">Vacancies</span>
+            Explore <span className="text-primary">Open Vacancies</span>
           </h1>
-          <p>
+          <p className="hero-subtitle">
             Showing <strong>{jobs.length}</strong> available position{jobs.length === 1 ? '' : 's'} across verified employers
           </p>
         </div>
       </section>
 
-      <div className="container" style={{ padding: '2.5rem 1.5rem' }}>
+      <div className="container main-content-container">
         {/* Alert Feedback */}
         {alertMsg.text && (
           <div className={`alert ${alertMsg.type === 'success' ? 'alert-success' : 'alert-error'}`}>
@@ -159,75 +167,77 @@ function BrowseJobs() {
         )}
 
         {/* Filters Toolbar */}
-        <form
-          onSubmit={handleFilterSubmit}
-          className="search-filter-container"
-        >
-          <div className="search-input-wrapper">
-            <Search size={18} color="#64748b" />
-            <input
-              type="text"
-              placeholder="Search title, skills, keyword..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+        <div className="search-filter-wrapper">
+          <form
+            onSubmit={handleFilterSubmit}
+            className="search-filter-container"
+          >
+            <div className="search-input-wrapper search-main">
+              <Search size={20} className="icon-muted" />
+              <input
+                type="text"
+                placeholder="Search title, skills, keyword..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
-          <div className="search-input-wrapper">
-            <MapPin size={18} color="#64748b" />
-            <input
-              type="text"
-              placeholder="Location (e.g. Remote, NY)..."
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
+            <div className="search-input-wrapper search-location">
+              <MapPin size={20} className="icon-muted" />
+              <input
+                type="text"
+                placeholder="Location (e.g. Remote, New York)"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
 
-          <div className="search-input-wrapper select-wrapper">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="All">All Categories</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Design">Design</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Product">Product</option>
-              <option value="Sales">Sales</option>
-              <option value="Finance">Finance</option>
-            </select>
-          </div>
+            <div className="search-input-wrapper select-wrapper search-category">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="All">All Categories</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Design">Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Product">Product</option>
+                <option value="Sales">Sales</option>
+                <option value="Finance">Finance</option>
+              </select>
+            </div>
 
-          <div className="jobs-filter-actions">
-            <button type="submit" className="btn btn-primary">
-              <Filter size={18} color="#ffffff" />
-              <span>Filter</span>
-            </button>
-
-            {(search || category !== 'All' || location) && (
-              <button type="button" onClick={handleClearFilters} className="btn btn-secondary jobs-filter-clear" aria-label="Clear filters" title="Clear filters">
-                <X size={18} color="var(--color-primary)" />
+            <div className="jobs-filter-actions">
+              <button type="submit" className="btn-filter">
+                Filter
               </button>
-            )}
-          </div>
-        </form>
+
+              {(search || category !== 'All' || location) && (
+                <button type="button" onClick={handleClearFilters} className="btn-clear-filter" aria-label="Clear filters" title="Clear filters">
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
 
         {/* Job Listings Grid */}
         {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '1.5rem' }}>
+          <div className="jobs-grid">
             {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="card" style={{ padding: '1.75rem', height: '240px' }}>
-                <div className="skeleton" style={{ height: '20px', width: '35%', marginBottom: '1rem' }} />
-                <div className="skeleton" style={{ height: '28px', width: '80%', marginBottom: '0.5rem' }} />
-                <div className="skeleton" style={{ height: '18px', width: '50%', marginBottom: '1.5rem' }} />
-                <div className="skeleton" style={{ height: '40px', width: '100%' }} />
+              <div key={n} className="job-card-premium skeleton-card">
+                <div className="skeleton" style={{ height: '24px', width: '30%', marginBottom: '1.5rem', borderRadius: '12px' }} />
+                <div className="skeleton" style={{ height: '20px', width: '40%', marginBottom: '0.75rem' }} />
+                <div className="skeleton" style={{ height: '32px', width: '80%', marginBottom: '1.5rem' }} />
+                <div className="skeleton" style={{ height: '30px', width: '60%', marginBottom: '2rem' }} />
+                <div className="skeleton" style={{ height: '40px', width: '100%', borderRadius: '20px' }} />
               </div>
             ))}
           </div>
         ) : jobs.length === 0 ? (
           <div className="card empty-state">
-            <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--bg-surface-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid var(--border-default)' }}>
-              <Search size={26} color="var(--text-primary)" />
+            <div className="empty-state-icon">
+              <Search size={26} color="var(--color-primary)" />
             </div>
             <h3 className="empty-state-title">No Jobs Found</h3>
             <p className="empty-state-desc">
@@ -239,83 +249,90 @@ function BrowseJobs() {
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))', gap: '1.5rem' }}>
-            {jobs.map((job) => {
+          <div className="jobs-grid">
+            {jobs.map((job, index) => {
               const isApplied = appliedJobIds.has(job._id);
+              
+              // Determine pastel theme based on index
+              const colorClasses = ['theme-peach', 'theme-mint', 'theme-lavender', 'theme-blue', 'theme-pink', 'theme-gray'];
+              const cardTheme = colorClasses[index % colorClasses.length];
+
+              // Determine posting date string
+              const dateObj = new Date(job.createdAt);
+              const dateString = isNaN(dateObj.getTime()) 
+                ? 'Recent' 
+                : dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
               return (
-                <div key={job._id} className="premium-job-card">
-                  <div className="job-card-header">
-                    <span className="badge badge-primary">{job.category}</span>
-                    <span className="job-posting-date">
-                      <Clock size={14} />
-                      {new Date(job.createdAt).toLocaleDateString()}
-                    </span>
+                <div key={job._id} className={`job-card-premium ${cardTheme}`}>
+                  {/* Top Row: Date & Bookmark */}
+                  <div className="job-card-top">
+                    <div className="job-date-badge">
+                      <Calendar size={14} className="icon-blue" />
+                      <span>{dateString}</span>
+                    </div>
+                    <button className="job-bookmark-btn" aria-label="Bookmark job">
+                      <Bookmark size={18} />
+                    </button>
                   </div>
 
-                  <Link to={`/jobs/${job._id}`} style={{ textDecoration: 'none' }}>
-                    <h2 className="job-title">
-                      {job.title}
-                    </h2>
-                  </Link>
-                  
-                  <div className="job-company">
-                    <Building2 size={18} />
-                    <span>{job.companyName}</span>
-                  </div>
+                  {/* Title & Employer area */}
+                  <div className="job-card-body">
+                    <div className="job-company-info">
+                      <span className="job-company-name">{job.companyName}</span>
+                    </div>
+                    
+                    <div className="job-title-row">
+                      <Link to={`/jobs/${job._id}`} className="job-title-link">
+                        <h2 className="job-title">{job.title}</h2>
+                      </Link>
+                      
+                      {/* Employer Logo Fallback */}
+                      <div className="job-company-logo">
+                        <Building2 size={24} className="icon-blue" />
+                      </div>
+                    </div>
 
-                  <div className="job-meta">
-                    <span className="job-meta-item">
-                      <MapPin size={16} />
-                      {job.location}
-                    </span>
-                    <span className="job-meta-item">
-                      <DollarSign size={16} />
-                      {job.salaryRange || 'Competitive'}
-                    </span>
-                  </div>
-
-                  <p className="job-desc">
-                    {job.description}
-                  </p>
-
-                  {job.requirements && job.requirements.length > 0 && (
-                    <div className="job-skills">
-                      {job.requirements.slice(0, 4).map((req, idx) => (
-                        <span key={idx} className="badge badge-neutral">
-                          {req}
-                        </span>
+                    {/* Job Tags */}
+                    <div className="job-tags">
+                      <span className="job-tag">{job.category}</span>
+                      {job.requirements && job.requirements.slice(0, 2).map((req, idx) => (
+                        <span key={idx} className="job-tag">{req}</span>
                       ))}
                     </div>
-                  )}
+                  </div>
 
-                  <hr className="job-divider" />
-
-                  <div className="job-actions">
-                    <Link
-                      to={`/jobs/${job._id}`}
-                      className="btn btn-secondary"
-                    >
-                      <span>Details</span>
-                    </Link>
-
-                    {isApplied ? (
-                      <button
-                        disabled
-                        className="btn btn-secondary btn-applied"
-                      >
-                        <CheckCircle2 size={18} />
-                        <span>Applied</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleApply(job._id)}
-                        disabled={applyingId === job._id}
-                        className="btn btn-primary"
-                      >
-                        {applyingId === job._id ? 'Applying...' : 'Apply Now'}
-                      </button>
-                    )}
+                  {/* Bottom Area */}
+                  <div className="job-card-footer">
+                    <div className="job-footer-left">
+                      <div className="job-salary">
+                        {job.salaryRange || 'Competitive'}
+                      </div>
+                      <div className="job-location">
+                        <MapPin size={14} />
+                        <span>{job.location}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="job-footer-right">
+                      {isApplied ? (
+                        <button disabled className="btn-applied-pill">
+                          Applied <CheckCircle2 size={16} />
+                        </button>
+                      ) : (
+                        <>
+                          <Link to={`/jobs/${job._id}`} className="btn-details-pill">
+                            Details <ArrowRight size={16} />
+                          </Link>
+                          {/* We keep Apply functionality available directly on card, but more compact */}
+                          {applyingId === job._id ? (
+                            <button disabled className="btn-apply-pill applying">...</button>
+                          ) : (
+                            <button onClick={() => handleApply(job._id)} className="btn-apply-pill">Apply</button>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

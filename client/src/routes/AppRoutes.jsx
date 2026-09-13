@@ -48,6 +48,14 @@ function AppRoutes() {
           }
         />
         <Route
+          path="/edit-job/:id"
+          element={
+            <ProtectedRoute allowedRoles={['employer', 'admin']}>
+              <PostJob />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/jobseeker"
           element={
             <ProtectedRoute allowedRoles={['job-seeker', 'jobseeker', 'admin']}>

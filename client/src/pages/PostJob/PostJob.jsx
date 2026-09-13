@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import {
   Briefcase,
   CheckCircle2,
@@ -17,6 +17,9 @@ function PostJob() {
   const { user, token } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
+
   const [formData, setFormData] = useState({
     title: '',
     category: 'Engineering',
@@ -29,6 +32,24 @@ function PostJob() {
 
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
+
+  React.useEffect(() => {
+    if (isEditMode) {
+      const allJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+      const jobToEdit = allJobs.find(j => j._id === id);
+      if (jobToEdit) {
+        setFormData({
+          title: jobToEdit.title || '',
+          category: jobToEdit.category || 'Engineering',
+          location: jobToEdit.location || '',
+          salaryRange: jobToEdit.salaryRange || '',
+          requirements: jobToEdit.requirements ? jobToEdit.requirements.join(', ') : '',
+          description: jobToEdit.description || '',
+          companyName: jobToEdit.companyName || user?.companyName || user?.name || '',
+        });
+      }
+    }
+  }, [id, isEditMode, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,29 +67,46 @@ function PostJob() {
 
     setLoading(true);
     try {
-      const newJob = {
-        _id: 'job_' + Date.now(),
-        ...formData,
-        requirements: formData.requirements ? formData.requirements.split(',').map(r => r.trim()).filter(Boolean) : [],
-        companyName: user?.companyName || user?.name,
-        employerId: user?.id,
-        createdAt: new Date().toISOString(),
-        applicantCount: 0,
-        shortlistedCount: 0
-      };
+      const allJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
       
-      const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-      existingJobs.push(newJob);
-      localStorage.setItem('jobs', JSON.stringify(existingJobs));
+      if (isEditMode) {
+        const updatedJobs = allJobs.map(j => {
+          if (j._id === id) {
+            return {
+              ...j,
+              ...formData,
+              requirements: formData.requirements ? formData.requirements.split(',').map(r => r.trim()).filter(Boolean) : [],
+              companyName: formData.companyName || user?.companyName || user?.name,
+            };
+          }
+          return j;
+        });
+        localStorage.setItem('jobs', JSON.stringify(updatedJobs));
+        setMsg({ type: 'success', text: 'Job vacancy updated successfully! Redirecting to dashboard...' });
+      } else {
+        const newJob = {
+          _id: 'job_' + Date.now(),
+          ...formData,
+          requirements: formData.requirements ? formData.requirements.split(',').map(r => r.trim()).filter(Boolean) : [],
+          companyName: formData.companyName || user?.companyName || user?.name,
+          employerId: user?.id,
+          createdAt: new Date().toISOString(),
+          applicantCount: 0,
+          shortlistedCount: 0
+        };
+        
+        allJobs.push(newJob);
+        localStorage.setItem('jobs', JSON.stringify(allJobs));
+        setMsg({ type: 'success', text: 'Job vacancy published successfully! Redirecting to dashboard...' });
+      }
 
-      setMsg({ type: 'success', text: 'Job vacancy published successfully! Redirecting to dashboard...' });
       setTimeout(() => {
         navigate('/employer');
       }, 1200);
     } catch (err) {
       setMsg({
         type: 'error',
-        text: err.response?.data?.message || 'Failed to publish job vacancy. Please try again.',
+        text: err.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'publish'} job vacancy. Please try again.`,
       });
     } finally {
       setLoading(false);
@@ -98,7 +136,7 @@ function PostJob() {
               <span>Back to Employer Dashboard</span>
             </Link>
             <h1 className="post-job-title">
-              Publish a New Vacancy
+              {isEditMode ? 'Edit Job Vacancy' : 'Publish a New Vacancy'}
             </h1>
           </div>
         </div>
@@ -251,7 +289,7 @@ function PostJob() {
               </Link>
               <button type="submit" className="btn btn-primary pill-btn" style={{ padding: '1rem 2.5rem' }} disabled={loading}>
                 <Briefcase size={18} style={{ marginRight: '8px' }} />
-                <span>{loading ? 'Publishing Vacancy...' : 'Publish Job Vacancy'}</span>
+                <span>{loading ? (isEditMode ? 'Updating...' : 'Publishing Vacancy...') : (isEditMode ? 'Update Job Vacancy' : 'Publish Job Vacancy')}</span>
               </button>
             </div>
 

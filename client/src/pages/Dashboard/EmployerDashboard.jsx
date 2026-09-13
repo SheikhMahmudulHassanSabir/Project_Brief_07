@@ -10,6 +10,7 @@ import {
   X,
   ExternalLink,
   Search,
+  Edit,
 } from 'lucide-react';
 import axios from 'axios';
 import './EmployerDashboard.css';
@@ -266,6 +267,9 @@ function EmployerDashboard() {
                         <td style={{ color: '#64748B' }}>{new Date(job.createdAt).toLocaleDateString()}</td>
                         <td>
                           <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <Link to={`/edit-job/${job._id}`} className="btn btn-sm btn-secondary" title="Edit job" style={{ background: '#F8FAFC', color: '#0F172A', borderColor: '#E2E8F0', borderRadius: '50%', width: '32px', height: '32px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Edit size={14} />
+                            </Link>
                             <button className="btn btn-sm btn-secondary" onClick={() => openApplicantsModal(job)} style={{ borderRadius: '999px', background: '#ffffff', borderColor: '#E2E8F0', color: '#0F172A' }}>
                               Review
                             </button>

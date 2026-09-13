@@ -5,9 +5,12 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowLeft,
+  Building2,
+  FileText,
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import './PostJob.css';
 
 function PostJob() {
   const navigate = useNavigate();
@@ -17,11 +20,11 @@ function PostJob() {
   const [formData, setFormData] = useState({
     title: '',
     category: 'Engineering',
-    location: user.location || '',
+    location: user?.location || '',
     salaryRange: '$80,000 - $120,000 / yr',
     requirements: '',
     description: '',
-    companyName: user.companyName || user.name || '',
+    companyName: user?.companyName || user?.name || '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -46,7 +49,9 @@ function PostJob() {
       const newJob = {
         _id: 'job_' + Date.now(),
         ...formData,
-        employerId: user.id,
+        requirements: formData.requirements ? formData.requirements.split(',').map(r => r.trim()).filter(Boolean) : [],
+        companyName: user?.companyName || user?.name,
+        employerId: user?.id,
         createdAt: new Date().toISOString(),
         applicantCount: 0,
         shortlistedCount: 0
@@ -71,10 +76,10 @@ function PostJob() {
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="post-job-page">
       {/* Header */}
-      <section style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border-default)', padding: '2rem 0' }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <section className="post-job-header">
+        <div className="container flex justify-between items-center flex-wrap gap-4">
           <div>
             <Link
               to="/employer"
@@ -82,16 +87,17 @@ function PostJob() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                color: 'var(--text-secondary)',
+                color: '#64748B',
                 fontWeight: '600',
-                fontSize: '0.88rem',
-                marginBottom: '0.5rem',
+                fontSize: '0.9rem',
+                marginBottom: '0.75rem',
+                textDecoration: 'none'
               }}
             >
               <ArrowLeft size={16} />
               <span>Back to Employer Dashboard</span>
             </Link>
-            <h1 style={{ fontSize: '2rem', fontWeight: '800', margin: 0, color: 'var(--text-primary)' }}>
+            <h1 className="post-job-title">
               Publish a New Vacancy
             </h1>
           </div>
@@ -99,129 +105,152 @@ function PostJob() {
       </section>
 
       {/* Main Form Container */}
-      <div className="container" style={{ padding: '3rem 1.5rem', maxWidth: '820px' }}>
+      <div className="container py-12 px-6" style={{ maxWidth: '900px' }}>
         {msg.text && (
-          <div className={`alert ${msg.type === 'success' ? 'alert-success' : 'alert-error'}`} style={{ marginBottom: '2rem' }}>
-            {msg.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+          <div className={`auth-alert ${msg.type === 'success' ? 'success' : 'error'}`} style={{ marginBottom: '2rem' }}>
+            {msg.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
             <span>{msg.text}</span>
           </div>
         )}
 
-        <div className="card" style={{ padding: '2.5rem', border: '1.5px solid var(--border-default)', boxShadow: 'var(--shadow-lg)' }}>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="post-job-card">
+          <form onSubmit={handleSubmit} className="post-job-form">
             
-            {/* Position Title */}
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Position Title *</label>
-              <input
-                type="text"
-                name="title"
-                className="form-input"
-                placeholder="e.g. Lead Full-Stack Software Engineer"
-                value={formData.title}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            {/* Section 1: Basic Information */}
+            <div>
+              <h2 className="post-job-section-title">
+                <Briefcase size={22} /> Basic Information
+              </h2>
+              
+              <div className="post-job-grid" style={{ marginBottom: '1.5rem' }}>
+                <div className="post-job-form-group">
+                  <label className="post-job-label">Position Title *</label>
+                  <div className="post-job-input-wrapper">
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="e.g. Lead Full-Stack Software Engineer"
+                      value={formData.title}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-            {/* Company & Category */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Hiring Organization / Company *</label>
-                <input
-                  type="text"
-                  name="companyName"
-                  className="form-input"
-                  placeholder="e.g. Acme Innovations Corp"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="post-job-form-group">
+                  <label className="post-job-label">Industry Category *</label>
+                  <div className="post-job-input-wrapper">
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                    >
+                      <option value="Engineering">Engineering & Software</option>
+                      <option value="Design">UI/UX & Product Design</option>
+                      <option value="Marketing">Marketing & Growth</option>
+                      <option value="Product">Product Management</option>
+                      <option value="Sales">Sales & Business Dev</option>
+                      <option value="Finance">Finance & Accounting</option>
+                    </select>
+                    <div className="post-job-select-arrow" />
+                  </div>
+                </div>
               </div>
 
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Industry Category *</label>
-                <select
-                  name="category"
-                  className="form-select"
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="Engineering">Engineering & Software</option>
-                  <option value="Design">UI/UX & Product Design</option>
-                  <option value="Marketing">Marketing & Growth</option>
-                  <option value="Product">Product Management</option>
-                  <option value="Sales">Sales & Business Dev</option>
-                  <option value="Finance">Finance & Accounting</option>
-                </select>
-              </div>
-            </div>
+              <div className="post-job-grid">
+                <div className="post-job-form-group">
+                  <label className="post-job-label">Work Location *</label>
+                  <div className="post-job-input-wrapper">
+                    <input
+                      type="text"
+                      name="location"
+                      placeholder="e.g. Remote / San Francisco, CA"
+                      value={formData.location}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-            {/* Location & Salary Range */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Work Location *</label>
-                <input
-                  type="text"
-                  name="location"
-                  className="form-input"
-                  placeholder="e.g. Remote / San Francisco, CA"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Compensation / Salary Range</label>
-                <input
-                  type="text"
-                  name="salaryRange"
-                  className="form-input"
-                  placeholder="e.g. $110,000 - $145,000 / yr"
-                  value={formData.salaryRange}
-                  onChange={handleChange}
-                />
+                <div className="post-job-form-group">
+                  <label className="post-job-label">Compensation / Salary Range</label>
+                  <div className="post-job-input-wrapper">
+                    <input
+                      type="text"
+                      name="salaryRange"
+                      placeholder="e.g. $110,000 - $145,000 / yr"
+                      value={formData.salaryRange}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Requirements */}
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Required Skills & Technologies (comma separated)</label>
-              <input
-                type="text"
-                name="requirements"
-                className="form-input"
-                placeholder="React, TypeScript, GraphQL, Docker, 4+ yrs experience"
-                value={formData.requirements}
-                onChange={handleChange}
-              />
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                These will be displayed as badge tags to attract matching candidates.
-              </span>
+            {/* Section 2: Details & Requirements */}
+            <div>
+              <h2 className="post-job-section-title" style={{ marginTop: '1rem' }}>
+                <FileText size={22} /> Details & Requirements
+              </h2>
+              
+              <div className="post-job-form-group" style={{ marginBottom: '1.5rem' }}>
+                <label className="post-job-label">Required Skills & Technologies (comma separated)</label>
+                <div className="post-job-input-wrapper">
+                  <input
+                    type="text"
+                    name="requirements"
+                    placeholder="React, TypeScript, GraphQL, Docker, 4+ yrs experience"
+                    value={formData.requirements}
+                    onChange={handleChange}
+                  />
+                </div>
+                <span style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '4px' }}>
+                  These will be displayed as badge tags to attract matching candidates.
+                </span>
+              </div>
+
+              <div className="post-job-form-group">
+                <label className="post-job-label">Comprehensive Job Description *</label>
+                <div className="post-job-textarea-wrapper">
+                  <textarea
+                    name="description"
+                    placeholder="Describe role responsibilities, team structure, qualification criteria, and employee benefits..."
+                    value={formData.description}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Detailed Description */}
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Comprehensive Job Description *</label>
-              <textarea
-                name="description"
-                rows="7"
-                className="form-textarea"
-                placeholder="Describe role responsibilities, team structure, qualification criteria, and employee benefits..."
-                value={formData.description}
-                onChange={handleChange}
-                required
-              />
+            {/* Section 3: Company Settings */}
+            <div>
+              <h2 className="post-job-section-title" style={{ marginTop: '1rem' }}>
+                <Building2 size={22} /> Hiring Organization
+              </h2>
+              
+              <div className="post-job-form-group">
+                <label className="post-job-label">Hiring Organization / Company Name *</label>
+                <div className="post-job-input-wrapper">
+                  <input
+                    type="text"
+                    name="companyName"
+                    placeholder="e.g. Acme Innovations Corp"
+                    value={formData.companyName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Action buttons */}
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)' }}>
-              <Link to="/employer" className="btn btn-secondary">
+            <div className="post-job-actions">
+              <Link to="/employer" className="btn btn-secondary pill-btn" style={{ padding: '1rem 2rem', background: '#F8FAFC', borderColor: '#E2E8F0', color: '#0F172A' }}>
                 Cancel
               </Link>
-              <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
-                <Briefcase size={18} />
+              <button type="submit" className="btn btn-primary pill-btn" style={{ padding: '1rem 2.5rem' }} disabled={loading}>
+                <Briefcase size={18} style={{ marginRight: '8px' }} />
                 <span>{loading ? 'Publishing Vacancy...' : 'Publish Job Vacancy'}</span>
               </button>
             </div>

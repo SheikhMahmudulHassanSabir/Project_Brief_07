@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import axios from 'axios';
-import '../Register/Register.css';
+import '../Auth.css';
 
 function Login() {
   const navigate = useNavigate();
@@ -45,57 +45,56 @@ function Login() {
   };
 
   return (
-    <div className="container" style={{ padding: '4.5rem 1rem', display: 'flex', justifyContent: 'center' }}>
-      <div className="register-card" style={{ width: '100%', maxWidth: '440px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Welcome Back</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Sign in to access your recruitment portal
-          </p>
+    <div className="auth-page-wrapper">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to access your recruitment portal</p>
         </div>
 
         {errorMsg && (
-          <div className="alert alert-error">
-            <AlertCircle size={18} />
+          <div className="auth-alert error">
+            <AlertCircle size={20} />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label">Email Address</label>
-            <input
-              type="email"
-              className="form-input"
-              placeholder="name@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-form-group">
+            <label className="auth-form-label">Email Address</label>
+            <div className="auth-input-wrapper">
+              <input
+                type="email"
+                placeholder="name@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label">Password</label>
-            <input
-              type="password"
-              className="form-input"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="auth-form-group">
+            <label className="auth-form-label">Password</label>
+            <div className="auth-input-wrapper">
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-lg" style={{ marginTop: '0.5rem' }} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+          <button type="submit" className="btn btn-primary auth-submit-btn" disabled={loading}>
+            <span>{loading ? 'Signing in...' : 'Sign In'}</span>
+            {!loading && <ArrowRight size={18} />}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.75rem', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-          Don't have an account yet?{' '}
-          <Link to="/register" style={{ color: 'var(--palette-accent)', fontWeight: '600' }}>
-            Create Account
-          </Link>
+        <div className="auth-footer-link">
+          Don't have an account yet?
+          <Link to="/register">Create Account</Link>
         </div>
       </div>
     </div>

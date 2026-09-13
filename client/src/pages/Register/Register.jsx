@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Building2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, Building2, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 import axios from 'axios';
-import './Register.css';
+import '../Auth.css';
 
 function Register() {
   const navigate = useNavigate();
@@ -112,144 +112,150 @@ function Register() {
   };
 
   return (
-    <div className="container" style={{ padding: '3.5rem 1rem', display: 'flex', justifyContent: 'center' }}>
-      <div className="register-card" style={{ width: '100%', maxWidth: '580px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.4rem', color: 'var(--text-primary)' }}>Create an Account</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-            Choose your account type to get started
-          </p>
+    <div className="auth-page-wrapper">
+      <div className="auth-card register-card">
+        <div className="auth-header">
+          <h1>Create an Account</h1>
+          <p>Choose your account type to get started</p>
         </div>
 
         {/* Role Toggle */}
-        <div className="role-tab-group" role="tablist">
+        <div className="auth-role-tabs" role="tablist">
           <button
             type="button"
-            className={`role-tab ${role === 'job-seeker' ? 'active' : ''}`}
+            className={`auth-role-tab ${role === 'job-seeker' ? 'active' : ''}`}
             onClick={() => handleRoleChange('job-seeker')}
           >
-            <User size={16} />
+            <User size={18} />
             <span>Job Seeker</span>
           </button>
           <button
             type="button"
-            className={`role-tab ${role === 'employer' ? 'active' : ''}`}
+            className={`auth-role-tab ${role === 'employer' ? 'active' : ''}`}
             onClick={() => handleRoleChange('employer')}
           >
-            <Building2 size={16} />
+            <Building2 size={18} />
             <span>Employer / Company</span>
           </button>
         </div>
 
         {errorMsg && (
-          <div className="alert alert-error">
-            <AlertCircle size={18} />
+          <div className="auth-alert error">
+            <AlertCircle size={20} />
             <span>{errorMsg}</span>
           </div>
         )}
         {successMsg && (
-          <div className="alert alert-success">
-            <CheckCircle2 size={18} />
+          <div className="auth-alert success">
+            <CheckCircle2 size={20} />
             <span>{successMsg}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label">
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-form-group">
+            <label className="auth-form-label">
               {role === 'employer' ? 'Contact Person / Recruiter Name' : 'Full Name'} *
             </label>
-            <input
-              type="text"
-              name="name"
-              className="form-input"
-              placeholder={role === 'employer' ? 'e.g. Sarah Jenkins' : 'e.g. Alex Morgan'}
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label">Work / Personal Email Address *</label>
-            <input
-              type="email"
-              name="email"
-              className="form-input"
-              placeholder={role === 'employer' ? 'recruiter@company.com' : 'alex@example.com'}
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-grid-2">
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Password *</label>
+            <div className="auth-input-wrapper">
               <input
-                type="password"
-                name="password"
-                className="form-input"
-                placeholder="Min. 6 characters"
-                value={formData.password}
+                type="text"
+                name="name"
+                placeholder={role === 'employer' ? 'e.g. Sarah Jenkins' : 'e.g. Alex Morgan'}
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Confirm Password *</label>
+          </div>
+
+          <div className="auth-form-group">
+            <label className="auth-form-label">Work / Personal Email Address *</label>
+            <div className="auth-input-wrapper">
               <input
-                type="password"
-                name="confirmPassword"
-                className="form-input"
-                placeholder="Re-enter password"
-                value={formData.confirmPassword}
+                type="email"
+                name="email"
+                placeholder={role === 'employer' ? 'recruiter@company.com' : 'alex@example.com'}
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
+            </div>
+          </div>
+
+          <div className="auth-form-grid">
+            <div className="auth-form-group">
+              <label className="auth-form-label">Password *</label>
+              <div className="auth-input-wrapper">
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Min. 6 characters"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            <div className="auth-form-group">
+              <label className="auth-form-label">Confirm Password *</label>
+              <div className="auth-input-wrapper">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Re-enter password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
           </div>
 
           {/* Conditional Job Seeker fields */}
           {role === 'job-seeker' && (
             <>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Professional Headline</label>
-                <input
-                  type="text"
-                  name="headline"
-                  className="form-input"
-                  placeholder="e.g. Senior Frontend Engineer | React & TypeScript"
-                  value={formData.headline}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-grid-2">
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Primary Skills (comma separated)</label>
+              <div className="auth-form-group">
+                <label className="auth-form-label">Professional Headline</label>
+                <div className="auth-input-wrapper">
                   <input
                     type="text"
-                    name="skills"
-                    className="form-input"
-                    placeholder="React, Node.js, UI/UX"
-                    value={formData.skills}
+                    name="headline"
+                    placeholder="e.g. Senior Frontend Engineer | React & TypeScript"
+                    value={formData.headline}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Experience Level</label>
-                  <select
-                    name="experienceLevel"
-                    className="form-select"
-                    value={formData.experienceLevel}
-                    onChange={handleChange}
-                  >
-                    <option value="Entry-Level">Entry-Level (0-2 yrs)</option>
-                    <option value="Mid-Level">Mid-Level (2-5 yrs)</option>
-                    <option value="Senior">Senior (5-8 yrs)</option>
-                    <option value="Lead/Director">Lead / Director (8+ yrs)</option>
-                  </select>
+              </div>
+
+              <div className="auth-form-grid">
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Primary Skills (comma separated)</label>
+                  <div className="auth-input-wrapper">
+                    <input
+                      type="text"
+                      name="skills"
+                      placeholder="React, Node.js, UI/UX"
+                      value={formData.skills}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Experience Level</label>
+                  <div className="auth-input-wrapper">
+                    <select
+                      name="experienceLevel"
+                      value={formData.experienceLevel}
+                      onChange={handleChange}
+                    >
+                      <option value="Entry-Level">Entry-Level (0-2 yrs)</option>
+                      <option value="Mid-Level">Mid-Level (2-5 yrs)</option>
+                      <option value="Senior">Senior (5-8 yrs)</option>
+                      <option value="Lead/Director">Lead / Director (8+ yrs)</option>
+                    </select>
+                    <div className="auth-select-arrow" />
+                  </div>
                 </div>
               </div>
             </>
@@ -258,90 +264,96 @@ function Register() {
           {/* Conditional Employer fields */}
           {role === 'employer' && (
             <>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Company Name *</label>
-                <input
-                  type="text"
-                  name="companyName"
-                  className="form-input"
-                  placeholder="e.g. Acme Tech Innovations"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-grid-2">
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Industry</label>
-                  <select
-                    name="industry"
-                    className="form-select"
-                    value={formData.industry}
+              <div className="auth-form-group">
+                <label className="auth-form-label">Company Name *</label>
+                <div className="auth-input-wrapper">
+                  <input
+                    type="text"
+                    name="companyName"
+                    placeholder="e.g. Acme Tech Innovations"
+                    value={formData.companyName}
                     onChange={handleChange}
-                  >
-                    <option value="Technology">Technology & Software</option>
-                    <option value="Finance">Finance & Banking</option>
-                    <option value="Healthcare">Healthcare & Medicine</option>
-                    <option value="Education">Education & E-learning</option>
-                    <option value="Design">Design & Creative</option>
-                    <option value="Marketing">Marketing & Growth</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Company Size</label>
-                  <select
-                    name="companySize"
-                    className="form-select"
-                    value={formData.companySize}
-                    onChange={handleChange}
-                  >
-                    <option value="1-10">1-10 employees</option>
-                    <option value="11-50">11-50 employees</option>
-                    <option value="51-200">51-200 employees</option>
-                    <option value="201-500">201-500 employees</option>
-                    <option value="500+">500+ employees</option>
-                  </select>
+                    required
+                  />
                 </div>
               </div>
 
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Company Website</label>
-                <input
-                  type="url"
-                  name="companyWebsite"
-                  className="form-input"
-                  placeholder="https://example.com"
-                  value={formData.companyWebsite}
-                  onChange={handleChange}
-                />
+              <div className="auth-form-grid">
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Industry</label>
+                  <div className="auth-input-wrapper">
+                    <select
+                      name="industry"
+                      value={formData.industry}
+                      onChange={handleChange}
+                    >
+                      <option value="Technology">Technology & Software</option>
+                      <option value="Finance">Finance & Banking</option>
+                      <option value="Healthcare">Healthcare & Medicine</option>
+                      <option value="Education">Education & E-learning</option>
+                      <option value="Design">Design & Creative</option>
+                      <option value="Marketing">Marketing & Growth</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <div className="auth-select-arrow" />
+                  </div>
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Company Size</label>
+                  <div className="auth-input-wrapper">
+                    <select
+                      name="companySize"
+                      value={formData.companySize}
+                      onChange={handleChange}
+                    >
+                      <option value="1-10">1-10 employees</option>
+                      <option value="11-50">11-50 employees</option>
+                      <option value="51-200">51-200 employees</option>
+                      <option value="201-500">201-500 employees</option>
+                      <option value="500+">500+ employees</option>
+                    </select>
+                    <div className="auth-select-arrow" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="auth-form-group">
+                <label className="auth-form-label">Company Website</label>
+                <div className="auth-input-wrapper">
+                  <input
+                    type="url"
+                    name="companyWebsite"
+                    placeholder="https://example.com"
+                    value={formData.companyWebsite}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </>
           )}
 
-          <div className="form-group" style={{ margin: 0 }}>
-            <label className="form-label">Location (City, Country)</label>
-            <input
-              type="text"
-              name="location"
-              className="form-input"
-              placeholder="e.g. San Francisco, USA or Remote"
-              value={formData.location}
-              onChange={handleChange}
-            />
+          <div className="auth-form-group">
+            <label className="auth-form-label">Location (City, Country)</label>
+            <div className="auth-input-wrapper">
+              <input
+                type="text"
+                name="location"
+                placeholder="e.g. San Francisco, USA or Remote"
+                value={formData.location}
+                onChange={handleChange}
+              />
+            </div>
           </div>
 
-          <button type="submit" className="btn btn-primary btn-lg" style={{ marginTop: '0.75rem' }} disabled={loading}>
-            {loading ? 'Creating Account...' : `Register as ${role === 'employer' ? 'Employer' : 'Job Seeker'}`}
+          <button type="submit" className="btn btn-primary auth-submit-btn" disabled={loading}>
+            <span>{loading ? 'Creating Account...' : `Register as ${role === 'employer' ? 'Employer' : 'Job Seeker'}`}</span>
+            {!loading && <ArrowRight size={18} />}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.75rem', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--palette-accent)', fontWeight: '600' }}>
-            Sign In
-          </Link>
+        <div className="auth-footer-link">
+          Already have an account?
+          <Link to="/login">Sign In</Link>
         </div>
       </div>
     </div>

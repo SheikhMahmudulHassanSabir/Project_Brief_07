@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoW from '../../assets/images/logo_W.png';
+
 import logoB from '../../assets/images/logo_B.png';
 
 function Footer() {
@@ -23,7 +23,7 @@ function Footer() {
     return () => observer.disconnect();
   }, []);
 
-  const activeLogo = currentTheme === 'dark' ? logoB : logoW;
+
 
   return (
     <footer
@@ -42,7 +42,7 @@ function Footer() {
           <div>
             <Link to="/" style={{ display: 'inline-block', marginBottom: '1rem', padding: 0, margin: 0 }}>
               <img
-                src={activeLogo}
+                src={logoB}
                 alt="Job Connect Portal"
                 style={{
                   height: '46px',

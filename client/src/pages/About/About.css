@@ -1,0 +1,284 @@
+/* About.css - Premium Job Search UI Redesign */
+
+.about-page-wrapper {
+  --about-primary: var(--color-primary);
+  --about-navy: var(--text-primary);
+  --about-cyan: var(--color-accent);
+  --about-light-blue: var(--primary-100);
+  --about-very-light: var(--bg-surface-subtle);
+  --about-border: var(--border-subtle);
+  --about-secondary-text: var(--text-secondary);
+  --about-main-text: var(--text-primary);
+}
+
+/* Hero Section */
+.about-hero {
+  background: var(--bg-surface);
+  background-image: linear-gradient(90deg, var(--bg-surface) 0%, var(--bg-surface-subtle) 100%);
+  padding: 6.5rem 1.5rem 5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--about-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: 13.6%;
+  left: 90.5%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: rgba(11, 79, 232, 0.04);
+  box-shadow: 
+    0 0 0 80px rgba(11, 79, 232, 0.03),
+    0 0 0 160px rgba(11, 79, 232, 0.02),
+    0 0 0 240px rgba(11, 79, 232, 0.01);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.about-hero-badge {
+  display: inline-block;
+  background: var(--about-light-blue);
+  color: var(--about-primary);
+  border-radius: 9999px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.about-hero h1 {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--about-navy);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.about-hero .text-gradient {
+  background: linear-gradient(135deg, var(--about-primary), var(--about-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-hero p {
+  color: var(--about-secondary-text);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+/* Section Headings */
+.about-section-header {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 3rem;
+}
+
+.about-section-header h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--about-navy);
+  margin-bottom: 1rem;
+}
+
+.about-section-header p {
+  color: var(--about-secondary-text);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Mission & Vision Section */
+.about-mission-vision-section {
+  padding: 5rem 1.5rem;
+}
+
+.about-mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.about-mission-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--about-border);
+  border-radius: 32px;
+  padding: 3rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-mission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: rgba(11, 79, 232, 0.15);
+}
+
+.about-icon-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--about-light-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.about-mission-card h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--about-navy);
+  margin-bottom: 1rem;
+}
+
+.about-mission-card p {
+  color: var(--about-secondary-text);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Values Section */
+.about-values-section {
+  background: var(--about-very-light);
+  padding: 5rem 1.5rem;
+  border-top: 1px solid var(--about-border);
+  border-bottom: 1px solid var(--about-border);
+}
+
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.about-value-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--about-border);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.02);
+  transition: all 0.2s ease;
+}
+
+.about-value-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+  border-color: rgba(11, 79, 232, 0.15);
+}
+
+.about-value-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--about-navy);
+  margin: 1rem 0 0.75rem 0;
+}
+
+.about-value-card p {
+  color: var(--about-secondary-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* CTA Footer */
+.about-cta-footer {
+  background: var(--about-primary);
+  padding: 5rem 1.5rem;
+  text-align: center;
+}
+
+.about-cta-footer h2 {
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+}
+
+.about-cta-footer p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
+}
+
+.about-cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.about-cta-actions .btn {
+  border-radius: 9999px;
+  padding: 1rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+}
+
+.about-cta-actions .btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-surface);
+}
+
+.about-cta-actions .btn-primary:hover {
+  background: var(--text-secondary);
+}
+
+.about-cta-actions .btn-secondary {
+  background: transparent;
+  color: var(--color-white);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.about-cta-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-white);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .about-hero::before {
+    left: 95%;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 5rem 1.5rem 4rem;
+  }
+  
+  .about-hero::before {
+    left: 100%;
+    top: 20%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.5;
+  }
+
+  .about-mission-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-mission-card {
+    padding: 2rem;
+    border-radius: 24px;
+  }
+  
+  .about-section-header h2 {
+    font-size: 1.8rem;
+  }
+}

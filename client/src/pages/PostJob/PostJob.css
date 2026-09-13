@@ -1,0 +1,161 @@
+/* PostJob.css */
+
+.post-job-page {
+  background-color: var(--bg-app);
+  min-height: calc(100vh - 80px);
+  padding-bottom: 4rem;
+}
+
+.post-job-header {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 80px;
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.post-job-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.post-job-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: var(--shadow-md);
+  margin: 0 auto;
+}
+
+.post-job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.post-job-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 1rem;
+}
+
+.post-job-section-title svg {
+  color: var(--color-primary);
+}
+
+.post-job-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.post-job-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.post-job-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Reusing the premium input wrapper style from Auth */
+.post-job-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--bg-surface-subtle);
+  padding: 0 1.2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  min-height: 54px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.post-job-input-wrapper:focus-within {
+  border-color: var(--color-primary);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+.post-job-input-wrapper input,
+.post-job-input-wrapper select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.post-job-input-wrapper select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.post-job-textarea-wrapper {
+  background: var(--bg-surface-subtle);
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.post-job-textarea-wrapper:focus-within {
+  border-color: var(--color-primary);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+.post-job-textarea-wrapper textarea {
+  border: none;
+  background: transparent;
+  width: 100%;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  resize: vertical;
+  min-height: 150px;
+}
+
+.post-job-select-arrow {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-secondary);
+  pointer-events: none;
+}
+
+.post-job-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .post-job-card {
+    padding: 2rem 1.5rem;
+  }
+}

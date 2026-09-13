@@ -94,16 +94,18 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="page-wrapper">
-      <div className="container dashboard-wrapper">
-        <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.4rem' }}>
-            <Shield size={28} color="var(--palette-accent)" />
-            <h1 style={{ fontSize: '2.25rem', fontWeight: '800', margin: 0, color: 'var(--text-primary)' }}>
+    <div className="dashboard-page-wrapper">
+      <div className="container dashboard-wrapper" style={{ maxWidth: '1200px' }}>
+        <div style={{ marginBottom: '3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '0.75rem' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E8F0' }}>
+              <Shield size={26} color="#0B1F4B" />
+            </div>
+            <h1 style={{ fontSize: '2.25rem', fontWeight: '800', margin: 0, color: '#0B1F4B' }}>
               Platform Administration
             </h1>
           </div>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <p style={{ color: '#64748B', fontSize: '1.05rem', margin: '0 0 0 60px' }}>
             System-wide analytics, user governance, vacancy moderation, and platform health
           </p>
         </div>
@@ -111,50 +113,42 @@ function AdminDashboard() {
         {/* KPI Grid */}
         <div className="kpi-matrix">
           <div className="kpi-stat-card">
-            <div className="kpi-stat-icon" style={{ background: 'var(--primary-50)', color: 'var(--palette-accent)' }}>
-              <Users size={24} color="var(--palette-accent)" />
+            <div className="kpi-stat-icon" style={{ background: '#F8FAFC', color: '#0B4FE8' }}>
+              <Users size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
-                Job Seekers
-              </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.totalUsers}</div>
+              <div className="kpi-stat-label">Job Seekers</div>
+              <div className="kpi-stat-value">{metrics.totalUsers}</div>
             </div>
           </div>
 
           <div className="kpi-stat-card">
-            <div className="kpi-stat-icon" style={{ background: 'var(--bg-surface-subtle)', color: 'var(--text-primary)', border: '1px solid var(--border-default)' }}>
-              <Building2 size={24} color="var(--text-primary)" />
+            <div className="kpi-stat-icon" style={{ background: '#F8FAFC', color: '#0F172A' }}>
+              <Building2 size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
-                Employers
-              </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.totalEmployers}</div>
+              <div className="kpi-stat-label">Employers</div>
+              <div className="kpi-stat-value">{metrics.totalEmployers}</div>
             </div>
           </div>
 
           <div className="kpi-stat-card">
-            <div className="kpi-stat-icon" style={{ background: 'var(--success-bg)', color: 'var(--success-text)' }}>
-              <Briefcase size={24} color="var(--success-text)" />
+            <div className="kpi-stat-icon" style={{ background: '#F0FDF4', color: '#166534' }}>
+              <Briefcase size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
-                Active Vacancies
-              </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.totalJobs}</div>
+              <div className="kpi-stat-label">Active Vacancies</div>
+              <div className="kpi-stat-value">{metrics.totalJobs}</div>
             </div>
           </div>
 
           <div className="kpi-stat-card">
-            <div className="kpi-stat-icon" style={{ background: 'var(--warning-bg)', color: 'var(--warning-text)' }}>
-              <FileText size={24} color="var(--warning-text)" />
+            <div className="kpi-stat-icon" style={{ background: '#FFFBEB', color: '#B45309' }}>
+              <FileText size={24} />
             </div>
             <div>
-              <div style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: '700' }}>
-                Applications
-              </div>
-              <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>{metrics.totalApplications}</div>
+              <div className="kpi-stat-label">Applications</div>
+              <div className="kpi-stat-value">{metrics.totalApplications}</div>
             </div>
           </div>
         </div>
@@ -183,10 +177,10 @@ function AdminDashboard() {
 
         {/* Tab: Overview / Recent Activity */}
         {activeTab === 'overview' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            <div className="card" style={{ padding: '1.75rem', border: '1.5px solid var(--border-default)' }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.25rem', color: 'var(--text-primary)' }}>Recent Registrations</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2rem' }}>
+            <div className="dashboard-table-card" style={{ padding: '2rem' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1.5rem', color: '#0B1F4B' }}>Recent Registrations</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {stats?.recentUsers?.map((u) => (
                   <div
                     key={u._id}
@@ -194,22 +188,24 @@ function AdminDashboard() {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      paddingBottom: '0.75rem',
-                      borderBottom: '1px solid var(--border-subtle)',
+                      paddingBottom: '1rem',
+                      borderBottom: '1px solid #E2E8F0',
                     }}
                   >
                     <div>
-                      <strong style={{ color: 'var(--text-primary)' }}>{u.name}</strong>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{u.email}</div>
+                      <strong style={{ color: '#0F172A', fontSize: '1.05rem', display: 'block', marginBottom: '4px' }}>{u.name}</strong>
+                      <div style={{ fontSize: '0.85rem', color: '#64748B' }}>{u.email}</div>
                     </div>
                     <span
-                      className={`badge ${
-                        u.role === 'admin'
-                          ? 'badge-danger'
-                          : u.role === 'employer'
-                          ? 'badge-primary'
-                          : 'badge-neutral'
-                      }`}
+                      className={`badge badge-neutral`}
+                      style={{ 
+                        fontSize: '0.8rem', 
+                        padding: '0.4rem 0.8rem', 
+                        borderRadius: '999px',
+                        background: u.role === 'admin' ? '#FEF2F2' : u.role === 'employer' ? '#F0FDF4' : '#F8FAFC',
+                        color: u.role === 'admin' ? '#991B1B' : u.role === 'employer' ? '#166534' : '#0F172A',
+                        border: `1px solid ${u.role === 'admin' ? '#FCA5A5' : u.role === 'employer' ? '#86EFAC' : '#E2E8F0'}`,
+                      }}
                     >
                       {u.role}
                     </span>
@@ -218,11 +214,11 @@ function AdminDashboard() {
               </div>
             </div>
 
-            <div className="card" style={{ padding: '1.75rem', border: '1.5px solid var(--border-default)' }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.25rem', color: 'var(--text-primary)' }}>Recent Applications</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="dashboard-table-card" style={{ padding: '2rem' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '1.5rem', color: '#0B1F4B' }}>Recent Applications</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 {stats?.recentApplications?.length === 0 ? (
-                  <p style={{ color: 'var(--text-muted)' }}>No recent submissions.</p>
+                  <p style={{ color: '#64748B' }}>No recent submissions.</p>
                 ) : (
                   stats?.recentApplications?.map((app) => (
                     <div
@@ -231,24 +227,28 @@ function AdminDashboard() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        paddingBottom: '0.75rem',
-                        borderBottom: '1px solid var(--border-subtle)',
+                        paddingBottom: '1rem',
+                        borderBottom: '1px solid #E2E8F0',
                       }}
                     >
                       <div>
-                        <strong style={{ color: 'var(--text-primary)' }}>{app.applicant?.name || 'Applicant'}</strong> applied for{' '}
-                        <em style={{ color: 'var(--palette-accent)' }}>{app.job?.title || 'Job'}</em>
-                        <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                          Company: {app.job?.companyName || 'N/A'}
+                        <div style={{ color: '#0F172A', fontSize: '1.05rem', fontWeight: '600', marginBottom: '4px' }}>
+                          {app.applicant?.name || 'Applicant'} <span style={{ color: '#64748B', fontWeight: '400', fontSize: '0.9rem' }}>applied for</span>
+                        </div>
+                        <div style={{ color: '#0B4FE8', fontWeight: '700', fontSize: '0.95rem', marginBottom: '4px' }}>
+                          {app.job?.title || 'Job'}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                          {app.job?.companyName || 'N/A'}
                         </div>
                       </div>
                       <span
-                        className={`badge ${
+                        className={`status-badge ${
                           app.status === 'Shortlisted'
-                            ? 'badge-success'
+                            ? 'shortlisted'
                             : app.status === 'Rejected'
-                            ? 'badge-danger'
-                            : 'badge-warning'
+                            ? 'rejected'
+                            : 'pending'
                         }`}
                       >
                         {app.status}
@@ -263,98 +263,110 @@ function AdminDashboard() {
 
         {/* Tab: Users Management */}
         {activeTab === 'users' && (
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>User & Email</th>
-                  <th>Assigned Role</th>
-                  <th>Joined Date</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u._id}>
-                    <td>
-                      <strong>{u.name}</strong>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{u.email}</div>
-                    </td>
-                    <td>
-                      <span
-                        className={`badge ${
-                          u.role === 'admin'
-                            ? 'badge-danger'
-                            : u.role === 'employer'
-                            ? 'badge-primary'
-                            : 'badge-neutral'
-                        }`}
-                      >
-                        {u.role}
-                      </span>
-                    </td>
-                    <td>{new Date(u.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      {u.role !== 'admin' && (
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDeleteUser(u._id)}
-                          style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Trash2 size={13} />
-                          <span>Delete User</span>
-                        </button>
-                      )}
-                    </td>
+          <div className="dashboard-table-card">
+            <div style={{ overflowX: 'auto' }}>
+              <table className="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>User & Email</th>
+                    <th>Assigned Role</th>
+                    <th>Joined Date</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u._id}>
+                      <td>
+                        <div className="dashboard-table-job-title">{u.name}</div>
+                        <div className="dashboard-table-job-meta">{u.email}</div>
+                      </td>
+                      <td>
+                        <span
+                          className={`badge badge-neutral`}
+                          style={{ 
+                            fontSize: '0.8rem', 
+                            padding: '0.4rem 0.8rem', 
+                            borderRadius: '999px',
+                            background: u.role === 'admin' ? '#FEF2F2' : u.role === 'employer' ? '#F0FDF4' : '#F8FAFC',
+                            color: u.role === 'admin' ? '#991B1B' : u.role === 'employer' ? '#166534' : '#0F172A',
+                            border: `1px solid ${u.role === 'admin' ? '#FCA5A5' : u.role === 'employer' ? '#86EFAC' : '#E2E8F0'}`,
+                          }}
+                        >
+                          {u.role}
+                        </span>
+                      </td>
+                      <td style={{ color: '#0F172A', fontWeight: '500' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        {u.role !== 'admin' ? (
+                          <button
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => handleDeleteUser(u._id)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FEF2F2', color: '#991B1B', borderColor: '#FCA5A5', borderRadius: '999px' }}
+                          >
+                            <Trash2 size={14} />
+                            <span>Delete</span>
+                          </button>
+                        ) : (
+                          <span style={{ color: '#94A3B8', fontSize: '0.85rem', fontStyle: 'italic' }}>Protected</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
         {/* Tab: Job Moderation */}
         {activeTab === 'jobs' && (
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Job Title</th>
-                  <th>Company</th>
-                  <th>Category</th>
-                  <th>Date Posted</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job) => (
-                  <tr key={job._id}>
-                    <td>
-                      <strong style={{ color: 'var(--text-primary)' }}>{job.title}</strong>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                        <MapPin size={12} color="var(--palette-accent)" />
-                        <span>{job.location}</span>
-                      </div>
-                    </td>
-                    <td>{job.companyName || job.employer?.companyName}</td>
-                    <td>
-                      <span className="badge badge-primary">{job.category}</span>
-                    </td>
-                    <td>{new Date(job.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => handleDeleteJob(job._id)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                      >
-                        <Trash2 size={13} />
-                        <span>Remove Listing</span>
-                      </button>
-                    </td>
+          <div className="dashboard-table-card">
+            <div style={{ overflowX: 'auto' }}>
+              <table className="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Category</th>
+                    <th>Date Posted</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {jobs.map((job) => (
+                    <tr key={job._id}>
+                      <td>
+                        <div className="dashboard-table-job-title">{job.title}</div>
+                        <div className="dashboard-table-job-meta">
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <MapPin size={12} />
+                            <span>{job.location}</span>
+                          </span>
+                        </div>
+                      </td>
+                      <td style={{ fontWeight: '600', color: '#0F172A' }}>{job.companyName || job.employer?.companyName}</td>
+                      <td>
+                        <span className="badge badge-neutral" style={{ background: '#F8FAFC', color: '#0F172A', border: '1px solid #E2E8F0', padding: '0.4rem 0.8rem', borderRadius: '999px' }}>
+                          {job.category}
+                        </span>
+                      </td>
+                      <td style={{ color: '#0F172A', fontWeight: '500' }}>{new Date(job.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={() => handleDeleteJob(job._id)}
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FEF2F2', color: '#991B1B', borderColor: '#FCA5A5', borderRadius: '999px' }}
+                        >
+                          <Trash2 size={14} />
+                          <span>Remove</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

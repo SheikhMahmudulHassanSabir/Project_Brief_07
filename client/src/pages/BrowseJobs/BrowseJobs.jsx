@@ -42,13 +42,24 @@ function BrowseJobs() {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const params = {};
-      if (search.trim()) params.search = search.trim();
-      if (category !== 'All') params.category = category;
-      if (location.trim()) params.location = location.trim();
-
-      const res = await axios.get(`${API_URL}/jobs`, { params });
-      setJobs(res.data);
+      const allJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+      
+      let filteredJobs = allJobs;
+      if (search.trim()) {
+        const lowerSearch = search.toLowerCase();
+        filteredJobs = filteredJobs.filter(j => 
+          j.title?.toLowerCase().includes(lowerSearch) || 
+          j.companyName?.toLowerCase().includes(lowerSearch) || 
+          j.description?.toLowerCase().includes(lowerSearch)
+        );
+      }
+      if (category !== 'All') {
+        filteredJobs = filteredJobs.filter(j => j.category === category);
+      }
+      if (location.trim()) {
+        filteredJobs = filteredJobs.filter(j => j.location?.toLowerCase().includes(location.toLowerCase()));
+      }
+      setJobs(filteredJobs);
     } catch (err) {
       console.error('Error fetching jobs:', err);
     } finally {
@@ -127,12 +138,12 @@ function BrowseJobs() {
   return (
     <div className="page-wrapper">
       {/* Header Banner */}
-      <section style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border-default)', padding: '2.5rem 0' }}>
-        <div className="container">
-          <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.4rem', color: 'var(--text-primary)' }}>
-            Explore Open Vacancies
+      <section className="page-header browse-jobs-header" style={{ background: 'transparent', padding: '4rem 1.5rem 2.5rem' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <h1>
+            Explore Open <span className="text-gradient">Vacancies</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+          <p>
             Showing <strong>{jobs.length}</strong> available position{jobs.length === 1 ? '' : 's'} across verified employers
           </p>
         </div>
@@ -150,59 +161,52 @@ function BrowseJobs() {
         {/* Filters Toolbar */}
         <form
           onSubmit={handleFilterSubmit}
-          className="card jobs-filter-form"
-          style={{
-            padding: '1.25rem',
-            marginBottom: '2.5rem',
-            border: '1.5px solid var(--border-default)',
-          }}
+          className="search-filter-container"
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', background: 'var(--bg-app)', padding: '0 0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
-            <Search size={16} color="var(--palette-accent)" />
+          <div className="search-input-wrapper">
+            <Search size={18} color="#64748b" />
             <input
               type="text"
               placeholder="Search title, skills, keyword..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ border: 'none', background: 'transparent', width: '100%', padding: '0.75rem 0', outline: 'none', color: 'var(--text-primary)', fontSize: '0.9rem' }}
             />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', background: 'var(--bg-app)', padding: '0 0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
-            <MapPin size={16} color="var(--palette-accent)" />
+          <div className="search-input-wrapper">
+            <MapPin size={18} color="#64748b" />
             <input
               type="text"
               placeholder="Location (e.g. Remote, NY)..."
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              style={{ border: 'none', background: 'transparent', width: '100%', padding: '0.75rem 0', outline: 'none', color: 'var(--text-primary)', fontSize: '0.9rem' }}
             />
           </div>
 
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="form-select"
-            style={{ margin: 0 }}
-          >
-            <option value="All">All Categories</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Design">Design</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Product">Product</option>
-            <option value="Sales">Sales</option>
-            <option value="Finance">Finance</option>
-          </select>
+          <div className="search-input-wrapper select-wrapper">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="All">All Categories</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Product">Product</option>
+              <option value="Sales">Sales</option>
+              <option value="Finance">Finance</option>
+            </select>
+          </div>
 
           <div className="jobs-filter-actions">
             <button type="submit" className="btn btn-primary">
-              <Filter size={16} />
+              <Filter size={18} color="#ffffff" />
               <span>Filter</span>
             </button>
 
             {(search || category !== 'All' || location) && (
               <button type="button" onClick={handleClearFilters} className="btn btn-secondary jobs-filter-clear" aria-label="Clear filters" title="Clear filters">
-                <X size={22} />
+                <X size={18} color="var(--color-primary)" />
               </button>
             )}
           </div>
@@ -223,7 +227,7 @@ function BrowseJobs() {
         ) : jobs.length === 0 ? (
           <div className="card empty-state">
             <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: 'var(--bg-surface-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', border: '1px solid var(--border-default)' }}>
-              <Search size={26} color="var(--palette-accent)" />
+              <Search size={26} color="var(--text-primary)" />
             </div>
             <h3 className="empty-state-title">No Jobs Found</h3>
             <p className="empty-state-desc">
@@ -240,92 +244,78 @@ function BrowseJobs() {
               const isApplied = appliedJobIds.has(job._id);
 
               return (
-                <div key={job._id} className="card card-interactive" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div className="card-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                      <span className="badge badge-primary">{job.category}</span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Clock size={12} />
-                        {new Date(job.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
+                <div key={job._id} className="premium-job-card">
+                  <div className="job-card-header">
+                    <span className="badge badge-primary">{job.category}</span>
+                    <span className="job-posting-date">
+                      <Clock size={14} />
+                      {new Date(job.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
 
-                    <Link to={`/jobs/${job._id}`} style={{ textDecoration: 'none' }}>
-                      <h2 style={{ fontSize: '1.3rem', fontWeight: '700', margin: '0 0 0.35rem 0', color: 'var(--text-primary)', transition: 'color var(--transition-fast)' }}>
-                        {job.title}
-                      </h2>
-                    </Link>
-                    <div style={{ color: 'var(--palette-accent)', fontWeight: '600', fontSize: '0.95rem', marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Building2 size={16} />
-                      <span>{job.companyName}</span>
-                    </div>
+                  <Link to={`/jobs/${job._id}`} style={{ textDecoration: 'none' }}>
+                    <h2 className="job-title">
+                      {job.title}
+                    </h2>
+                  </Link>
+                  
+                  <div className="job-company">
+                    <Building2 size={18} />
+                    <span>{job.companyName}</span>
+                  </div>
 
-                    <div style={{ display: 'flex', gap: '1rem', fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <MapPin size={14} color="var(--palette-accent)" />
-                        {job.location}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <DollarSign size={14} color="var(--palette-accent)" />
-                        {job.salaryRange || 'Competitive'}
-                      </span>
-                    </div>
+                  <div className="job-meta">
+                    <span className="job-meta-item">
+                      <MapPin size={16} />
+                      {job.location}
+                    </span>
+                    <span className="job-meta-item">
+                      <DollarSign size={16} />
+                      {job.salaryRange || 'Competitive'}
+                    </span>
+                  </div>
 
-                    <p
-                      style={{
-                        fontSize: '0.9rem',
-                        color: 'var(--text-secondary)',
-                        lineHeight: '1.6',
-                        marginBottom: '1.25rem',
-                        flex: 1,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
+                  <p className="job-desc">
+                    {job.description}
+                  </p>
+
+                  {job.requirements && job.requirements.length > 0 && (
+                    <div className="job-skills">
+                      {job.requirements.slice(0, 4).map((req, idx) => (
+                        <span key={idx} className="badge badge-neutral">
+                          {req}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <hr className="job-divider" />
+
+                  <div className="job-actions">
+                    <Link
+                      to={`/jobs/${job._id}`}
+                      className="btn btn-secondary"
                     >
-                      {job.description}
-                    </p>
+                      <span>Details</span>
+                    </Link>
 
-                    {job.requirements && job.requirements.length > 0 && (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '1.5rem' }}>
-                        {job.requirements.slice(0, 4).map((req, idx) => (
-                          <span key={idx} className="badge badge-neutral">
-                            {req}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: '0.5rem' }}>
-                      <Link
-                        to={`/jobs/${job._id}`}
-                        className="btn btn-secondary"
-                        style={{ flex: 1 }}
+                    {isApplied ? (
+                      <button
+                        disabled
+                        className="btn btn-secondary btn-applied"
                       >
-                        Details
-                      </Link>
-
-                      {isApplied ? (
-                        <button
-                          disabled
-                          className="btn btn-secondary"
-                          style={{ flex: 1.5, color: 'var(--success-text)', background: 'var(--success-bg)', borderColor: 'var(--success-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                        >
-                          <CheckCircle2 size={16} />
-                          <span>Applied</span>
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleApply(job._id)}
-                          disabled={applyingId === job._id}
-                          className="btn btn-primary"
-                          style={{ flex: 1.5 }}
-                        >
-                          {applyingId === job._id ? 'Applying...' : 'Apply Now'}
-                        </button>
-                      )}
-                    </div>
+                        <CheckCircle2 size={18} />
+                        <span>Applied</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleApply(job._id)}
+                        disabled={applyingId === job._id}
+                        className="btn btn-primary"
+                      >
+                        {applyingId === job._id ? 'Applying...' : 'Apply Now'}
+                      </button>
+                    )}
                   </div>
                 </div>
               );

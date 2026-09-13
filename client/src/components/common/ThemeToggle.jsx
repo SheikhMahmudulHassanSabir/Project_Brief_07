@@ -28,9 +28,9 @@ function ThemeToggle() {
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
-        background: theme === 'dark' ? '#262626' : '#F0F0F0',
-        color: theme === 'dark' ? '#EDEDED' : '#171717',
-        border: theme === 'dark' ? '1px solid #444444' : '1px solid #D4D4D4',
+        background: 'var(--bg-surface-elevated)',
+        color: 'var(--text-primary)',
+        border: '1px solid var(--border-default)',
         borderRadius: '999px',
         padding: '0.4rem 0.8rem',
         fontSize: '0.82rem',
@@ -41,11 +41,11 @@ function ThemeToggle() {
       }}
     >
       {theme === 'dark' ? (
-        <Sun size={15} color="#DA0037" />
+        <Sun size={15} color="currentColor" />
       ) : (
-        <Moon size={15} color="#171717" />
+        <Moon size={15} color="currentColor" />
       )}
-      <span style={{ color: theme === 'dark' ? '#EDEDED' : '#171717' }}>
+      <span>
         {theme === 'dark' ? 'Dark' : 'Light'}
       </span>
     </button>

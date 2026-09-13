@@ -73,9 +73,9 @@ function Navbar() {
   };
 
   const getDashboardIcon = () => {
-    if (user?.role === 'admin') return <Shield size={14} color="var(--palette-accent)" />;
-    if (user?.role === 'employer') return <Briefcase size={14} color="var(--palette-accent)" />;
-    return <UserCheck size={14} color="var(--palette-accent)" />;
+    if (user?.role === 'admin') return <Shield size={14} color="var(--text-primary)" />;
+    if (user?.role === 'employer') return <Briefcase size={14} color="var(--text-primary)" />;
+    return <UserCheck size={14} color="var(--text-primary)" />;
   };
 
   const isActive = (path) => location.pathname === path;
@@ -83,34 +83,8 @@ function Navbar() {
   // In dark mode: black navbar with logo_B.png; in light mode: white navbar with logo_W.png
   const activeLogo = currentTheme === 'dark' ? logoB : logoW;
 
-  // Uniform pill button styles matching the ThemeToggle (dark mode button)
-  const navBtnBaseStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '6px',
-    background: currentTheme === 'dark' ? '#262626' : '#F0F0F0',
-    color: currentTheme === 'dark' ? '#EDEDED' : '#171717',
-    border: currentTheme === 'dark' ? '1px solid #444444' : '1px solid #D4D4D4',
-    borderRadius: '999px',
-    padding: '0.4rem 0.85rem',
-    fontSize: '0.82rem',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all var(--transition-fast)',
-    userSelect: 'none',
-    textDecoration: 'none',
-    lineHeight: 1,
-  };
-
-  const navBtnAccentStyle = {
-    ...navBtnBaseStyle,
-    background: 'var(--palette-accent)',
-    color: '#FFFFFF',
-    border: '1px solid var(--palette-accent)',
-    boxShadow: 'var(--primary-shadow)',
-  };
-
+  // Remove hardcoded styles and rely on CSS classes (btn, btn-primary) for buttons.
+  
   const dropdownItemStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -125,7 +99,7 @@ function Navbar() {
     width: '100%',
     textAlign: 'left',
     textDecoration: 'none',
-    transition: 'background-color var(--transition-fast)',
+    transition: 'background-color var(--transition-fast), color var(--transition-fast)',
   };
 
   return (
@@ -249,7 +223,7 @@ function Navbar() {
               
               <Link
                 to={getDashboardLink()}
-                style={navBtnBaseStyle}
+                className="btn btn-secondary btn-sm"
               >
                 {getDashboardIcon()}
                 <span>{getDashboardLabel()}</span>
@@ -301,10 +275,10 @@ function Navbar() {
                       top: 'calc(100% + 15px)',
                       right: 0,
                       width: '240px',
-                      background: currentTheme === 'dark' ? '#1f1f1f' : '#ffffff',
-                      border: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea',
+                      background: 'var(--bg-surface-elevated)',
+                      border: '1px solid var(--border-default)',
                       borderRadius: 'var(--radius-md)',
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                      boxShadow: 'var(--shadow-lg)',
                       padding: '0.5rem',
                       zIndex: 1000,
                       display: 'flex',
@@ -314,7 +288,7 @@ function Navbar() {
                   >
                     <div style={{ 
                       padding: '0.5rem 0.5rem 0.75rem 0.5rem', 
-                      borderBottom: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea',
+                      borderBottom: '1px solid var(--border-default)',
                       marginBottom: '0.25rem',
                       display: 'flex',
                       alignItems: 'center',
@@ -337,7 +311,7 @@ function Navbar() {
                         {user.name?.charAt(0) || 'U'}
                       </div>
                       <div>
-                        <div style={{ color: currentTheme === 'dark' ? '#EDEDED' : '#171717', fontWeight: '600', fontSize: '0.9rem' }}>{user.name}</div>
+                        <div style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '0.9rem' }}>{user.name}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
                           {user.role}
                         </div>
@@ -347,9 +321,8 @@ function Navbar() {
                     <Link
                       to="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      style={{ ...dropdownItemStyle, color: 'var(--text-primary)' }}
+                      className="nav-dropdown-item"
                     >
                       <User size={16} />
                       <span>Profile</span>
@@ -357,28 +330,25 @@ function Navbar() {
                     <Link
                       to="/settings"
                       onClick={() => setDropdownOpen(false)}
-                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      style={{ ...dropdownItemStyle, color: 'var(--text-primary)' }}
+                      className="nav-dropdown-item"
                     >
                       <Settings size={16} />
                       <span>Settings</span>
                     </Link>
                     <button
                       onClick={toggleTheme}
-                      style={{ ...dropdownItemStyle, color: currentTheme === 'dark' ? '#EDEDED' : '#171717' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      style={{ ...dropdownItemStyle, color: 'var(--text-primary)' }}
+                      className="nav-dropdown-item"
                     >
                       {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                       <span>Theme</span>
                     </button>
-                    <div style={{ borderTop: currentTheme === 'dark' ? '1px solid #333' : '1px solid #eaeaea', margin: '0.25rem 0' }} />
+                    <div style={{ borderTop: '1px solid var(--border-default)', margin: '0.25rem 0' }} />
                     <button
                       onClick={handleLogout}
                       style={{ ...dropdownItemStyle, color: 'var(--palette-accent)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = currentTheme === 'dark' ? '#262626' : '#F5F5F5'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      className="nav-dropdown-item"
                     >
                       <LogOut size={16} />
                       <span>Logout</span>
@@ -391,13 +361,13 @@ function Navbar() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }} className="desktop-nav">
               <Link
                 to="/login"
-                style={navBtnBaseStyle}
+                className="btn btn-secondary btn-sm"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                style={navBtnAccentStyle}
+                className="btn btn-primary btn-sm"
               >
                 Get Started
               </Link>
@@ -407,12 +377,10 @@ function Navbar() {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="mobile-menu-btn"
+            className="btn btn-secondary mobile-menu-btn"
             aria-label="Toggle navigation menu"
             style={{
-              ...navBtnBaseStyle,
               padding: '0.4rem 0.65rem',
-              display: 'none',
             }}
           >
             {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -466,7 +434,7 @@ function Navbar() {
               <Link
                 to={getDashboardLink()}
                 onClick={() => setMobileMenuOpen(false)}
-                style={{ ...navBtnBaseStyle, width: '100%', justifyContent: 'flex-start' }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--nav-text)', fontSize: '0.95rem', fontWeight: '500', width: '100%', justifyContent: 'flex-start' }}
               >
                 {getDashboardIcon()}
                 <span>{getDashboardLabel()}</span>
@@ -515,14 +483,16 @@ function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  style={{ ...navBtnBaseStyle, flex: 1 }}
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  style={{ ...navBtnAccentStyle, flex: 1 }}
+                  className="btn btn-primary"
+                  style={{ flex: 1 }}
                 >
                   Get Started
                 </Link>
